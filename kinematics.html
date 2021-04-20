@@ -62,7 +62,7 @@
 				if (isNaN(txt.substring(0, 1)))
 					return NaN;
 				var index = 0;
-				while (!isNaN(txt.charAt(index)) || txt.charAt(index) == ".")
+				while (!isNaN(txt.charAt(index)) || txt.charAt(index) == ".")//might it be easier to just have check marks to check different units
 					index++;
 				var num = txt.substring(0, index);
 				num = parseFloat(num);
