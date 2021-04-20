@@ -16,21 +16,21 @@
 			</tr>
 			<tr id="accelRow">
 				<td>Acceleration</td>
-				<td><input type="number" id="a" value=0></td>
+				<td><input type="number" id="a" value=0 disabled></td>
 				<td><select class="accel"></select></td>
-				<td><input type="checkbox" checked></td>
+				<td><input type="checkbox"></td>
 			</tr>
 			<tr id="viRow">
 				<td>Initial Velocity</td>
-				<td><input type="number" id="vi" value=0 disabled></td>
+				<td><input type="number" id="vi" value=0></td>
 				<td><select class="vel"></select></td>
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" checked></td>
 			</tr>
 			<tr id="vfRow">
 				<td>Final Velocity</td>
-				<td><input type="number" id="vf" value=0 disabled></td>
+				<td><input type="number" id="vf" value=0></td>
 				<td><select class="vel"></select></td>
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" checked></td>
 			</tr>
 			<tr id="avgVRow">
 				<td>Average Velocity</td>
@@ -40,7 +40,7 @@
 			</tr>
 			<tr id="timeRow">
 				<td>Time</td>
-				<td><input type="number" id="t" value=0 disabled></td>
+				<td><input type="number" id="t" value=1 disabled></td>
 				<td><select class="time"></select></td>
 				<td><input type="checkbox"></td>
 			</tr>
@@ -72,10 +72,10 @@ window.onload = function () {
 			options.push(["km/h", 3.6]);
 		} else if (type == "time") {
 			options.push(["s", 1]);
-			options.push(["min", 60]);
-			options.push(["hour", 3600]);
-			options.push(["ms", 1/1000]);
-			options.push(["ns", 1/1000000000]);
+			options.push(["min", 1/60]);
+			options.push(["hour", 1/3600]);
+			options.push(["ms", 1000]);
+			options.push(["ns", 1000000000]);
 		} else if (type == "dist") {
 			options.push(["meter", 1]);
 			options.push(["foot", 1/3.281]);
@@ -106,7 +106,11 @@ function isKnown (name) {
 	return document.getElementById(name).querySelector("input[type='checkbox']").checked;
 }
 function getValue (name) {
-	return document.getElementById(name).querySelector("input[type='number']").value;
+	var elem = document.getElementById(name);
+	var select = elem.querySelector("select");
+	
+	return parseFloat(elem.querySelector("input[type='number']").value) / 
+			parseFloat(select.options[select.selectedIndex].value);
 }
 function setValue (name, val) {
 	document.getElementById(name).querySelector("input[type='number']").value = val;
@@ -118,6 +122,10 @@ function processVelAvg () {
 	
 	if (isKnown("viRow") && isKnown("vfRow")) {
 		setValue("avgVRow", (getValue("viRow") + getValue("vfRow")) / 2);
+		return;
+	}
+	if (isKnown("dispRow") && isKnown("timeRow")) {
+		setValue("avgVRow", getValue("dispRow") / getValue("timeRow"));
 		return;
 	}
 }
