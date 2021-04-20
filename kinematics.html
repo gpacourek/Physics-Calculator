@@ -130,7 +130,7 @@ function processVelAvg () {
 	}
 }
 
-function proccessAcc(){
+function processAcc(){
 	//initialize variable so it is quicker to write out equations
 	
 	if (isKnown("accelRow")){
@@ -268,7 +268,8 @@ function proccessDist(){
 			
 function processAll () {
 	processVelAvg();
-	proccessAcc();
+	processAcc();
+	processDist();
 }
 
 //setTimeout(() => {location.reload()}, 10000);
