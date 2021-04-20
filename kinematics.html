@@ -14,34 +14,40 @@
 				<td><b>Value</b></td>
 				<td><b>Known?</b></td>
 			</tr>
-			<tr>
+			<tr id="accelRow">
 				<td>Acceleration</td>
-				<td><input type="text" id="a" value="1 m/s" func="calcAccel(this.value);"></td>
+				<td><input type="number" id="a" value=0></td>
+				<td><select class="accel"></select></td>
 				<td><input type="checkbox" checked></td>
 			</tr>
-			<tr>
+			<tr id="viRow">
 				<td>Initial Velocity</td>
-				<td><input type="text" id="vi" value=0 disabled func="calcVelocity(this.value);"></td>
+				<td><input type="number" id="vi" value=0 disabled></td>
+				<td><select class="vel"></select></td>
 				<td><input type="checkbox"></td>
 			</tr>
-			<tr>
+			<tr id="vfRow">
 				<td>Final Velocity</td>
-				<td><input type="text" id="vf" value=0 disabled func="calcVelocity(this.value);"></td>
+				<td><input type="number" id="vf" value=0 disabled></td>
+				<td><select class="vel"></select></td>
 				<td><input type="checkbox"></td>
 			</tr>
-			<tr>
+			<tr id="avgVRow">
 				<td>Average Velocity</td>
-				<td><input type="text" id="vavg" value=0 disabled func="calcVelocity(this.value);"></td>
+				<td><input type="number" id="vavg" value=0 disabled></td>
+				<td><select class="vel"></select></td>
 				<td><input type="checkbox"></td>
 			</tr>
-			<tr>
+			<tr id="timeRow">
 				<td>Time</td>
-				<td><input type="text" id="t" value=0 disabled></td>
+				<td><input type="number" id="t" value=0 disabled></td>
+				<td><select class="time"></select></td>
 				<td><input type="checkbox"></td>
 			</tr>
-			<tr>
+			<tr id="dispRow">
 				<td>Displacement</td>
-				<td><input type="text" id="d" value=0 disabled></td>
+				<td><input type="number" id="d" value=0 disabled></td>
+				<td><select class="dist"></select></td>
 				<td><input type="checkbox"></td>
 			</tr>
 		</table>
@@ -53,74 +59,74 @@
 		-->
 		
 		<script>
-			function calcAccel (txt) {
-				if (txt.length < 1)
-					return NaN;
-				if (!isNaN(txt)) {
-					return parseFloat(txt);
-				}
-				if (isNaN(txt.substring(0, 1)))
-					return NaN;
-				var index = 0;
-				while (!isNaN(txt.charAt(index)) || txt.charAt(index) == ".")//might it be easier to just have check marks to check different units
-					index++;
-				var num = txt.substring(0, index);
-				num = parseFloat(num);
-				
-				var rest = txt.substring(index);
-				var factor = -1;
-				
-				if (rest == "m/s" || rest == "ms")
-					factor = 1;
-				
-				if (factor == -1)
-					return NaN;
-				return num / factor;
-			}
-			
-			function calcVelocity (txt) {
-				if (txt.length < 1)
-					return NaN;
-				if (!isNaN(txt)) {
-					return parseFloat(txt);
-				}
-				if (isNaN(txt.substring(0, 1)))
-					return NaN;
-				var index = 0;
-				while (!isNaN(txt.charAt(index)) || txt.charAt(index) == ".")
-					index++;
-				var num = txt.substring(0, index);
-				num = parseFloat(num);
-				
-				var rest = txt.substring(index);
-				var factor = -1;
-				
-				if (rest == "m/s" || rest == "ms")
-					factor = 1;
-				else if (rest == "mph")
-					factor = 2.237;
-				else if (rest == "fps")
-					factor = 3.281;
-				
-				if (factor == -1)
-					return NaN;
-				return num / factor;
-			}
-			
-			for (var checkbox of document.querySelectorAll("input[type='checkbox']")) {
-				checkbox.onclick = function () {
-					this.parentElement.parentElement.querySelector("input[type='text']").disabled = !this.checked;
-				};
-			}
-			
-			for (var inputBox of document.querySelectorAll("input[type='text']")) {
-				inputBox.onkeyup = function () {
-					this.setAttribute("hiddenVal", eval(this.getAttribute("func")));
-				}
-				inputBox.onkeyup();
-			}
+window.onload = function () {
+	for (var select of document.querySelectorAll("select")) {
+		var type = select.className;
+		var options = [];
 		
-			//setTimeout(() => {location.reload()}, 10000);
+		if (type == "accel") {
+			options.push(["m/s²", 1]);
+		} else if (type == "vel") {
+			options.push(["m/s", 1]);
+			options.push(["mph", 2.237]);
+			options.push(["km/h", 3.6]);
+		} else if (type == "time") {
+			options.push(["s", 1]);
+			options.push(["min", 60]);
+			options.push(["hour", 3600]);
+			options.push(["ms", 1/1000]);
+			options.push(["ns", 1/1000000000]);
+		} else if (type == "dist") {
+			options.push(["meter", 1]);
+			options.push(["foot", 1/3.281]);
+			options.push(["inch", 1/3.281 * 12]);
+		}
+		
+		options.forEach((option) => {
+			var elem = document.createElement("option");
+			elem.innerHTML = option[0];
+			elem.value = option[1];
+			select.appendChild(elem);
+		});
+	}
+
+	for (var checkbox of document.querySelectorAll("input[type='checkbox']")) {
+		checkbox.onclick = function () {
+			this.parentElement.parentElement.querySelector("input[type='number']").disabled = !this.checked;
+		};
+	}
+	
+	for (var input of document.querySelectorAll("input")) {
+		input.onkeyup = processAll;
+	}
+}
+
+function isKnown (name) {
+	return document.getElementById(name).querySelector("input[type='checkbox']").checked;
+}
+function getValue (name) {
+	return document.getElementById(name).querySelector("input[type='number']").value;
+}
+function setValue (name, val) {
+	document.getElementById(name).querySelector("input[type='number']").value = val;
+}
+
+function processVelAvg () {
+	if (isKnown("avgVRow"))
+		return;
+	
+	if (isKnown("viRow") && isKnown("vfRow")) {
+		setValue("avgVRow", (getValue("viRow") + getValue("vfRow")) / 2);
+		return;
+	}
+}
+
+function processAll () {
+	processVelAvg();
+}
+
+//setTimeout(() => {location.reload()}, 10000);
+//setInterval(() => {processVelAvg()}, 1000);
 		</script>
 	</body>
 </html>
