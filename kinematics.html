@@ -66,6 +66,7 @@ window.onload = function () {
 		
 		if (type == "accel") {
 			options.push(["m/s²", 1]);
+			options.push(["gs", 1/9.806]);
 		} else if (type == "vel") {
 			options.push(["m/s", 1]);
 			options.push(["mph", 2.237]);
@@ -80,6 +81,7 @@ window.onload = function () {
 			options.push(["meter", 1]);
 			options.push(["foot", 1/3.281]);
 			options.push(["inch", 1/3.281 * 12]);
+			options.push(["miles", 1/1609]);
 		}
 		
 		options.forEach((option) => {
@@ -134,46 +136,47 @@ function processAcc(){
 	//initialize variable so it is quicker to write out equations
 	
 	if (isKnown("accelRow")){
-		var aKnown = True;
+		return;
+		var aKnown = true;
 		var a = getValue("accelRow");
 	}
 	else{
-		var aKnown = False;
+		var aKnown = false;
 	}
 	if (isKnown("dispRow")){
-		var dKnown = True;
+		var dKnown = true;
 		var d = getValue("dispRow");
 	}
 	else{
-		var dKnown = False;
+		var dKnown = false;
 	}
 	if (isKnown("timeRow")){
-		var tKnown = True;
+		var tKnown = true;
 		var t = getValue("timeRow");
 	}
 	else{
-		var tKnown = False;
+		var tKnown = false;
 	}
 	if (isKnown("viRow")){
-		var viKnown = True;
+		var viKnown = true;
 		var vi = getValue("viRow");
 	}
 	else{
-		var viKnown = False;
+		var viKnown = false;
 	}
 	if (isKnown("vfRow")){
-		var vfKnown = True;
+		var vfKnown = true;
 		var vf = getValue("vfRow");
 	}
 	else{
-		var vfKnown = False;
+		var vfKnown = false;
 	}
 	if (isKnown("avgVRow")){
-		var vaKnown = True;
+		var vaKnown = true;
 		var va = getValue("avgVRow");
 	}
 	else{
-		var vaKnown = False;
+		var vaKnown = false;
 	}
 	
 	//equations
@@ -181,67 +184,58 @@ function processAcc(){
 		return;	
 	}
 	else if(vfKnown && viKnown && tKnown){
-		setValue((vf-vi)/t);	
+		setValue("accelRow", (vf-vi)/t);	
 		return;
 	}
 	else if(tKnown && viKnown && dKnown){
-		setValue(2(d-vi*t)/Math.pow(t,2));	
+		setValue("accelRow", 2 * (d-vi*t)/Math.pow(t,2));	
 		return;
 	}
 	else if(vfKnown && viKnown && dKnown){
-		setValue((vf-vi)/t);	
-		return;
-	}
-	else{
-		setValue("Can't be calculated with given info");	
+		setValue("accelRow", (vf-vi)/d);	
 		return;
 	}
 }
 
-function proccessDist(){
+function processDist(){
 	//initialize variable so it is quicker to write out equations
-	
-	if (isKnown("accelRow")){
-		var aKnown = True;
-		var a = getValue("accelRow");
-	}
-	else{
-		var aKnown = False;
-	}
-	if (isKnown("dispRow")){
-		var dKnown = True;
+	var dKnown = isKnown("dispRow");
+	if (dKnown) {
+		return;
 		var d = getValue("dispRow");
 	}
-	else{
-		var dKnown = False;
-	}
+	
+	var aKnown = isKnown("accelRow");
+	if (aKnown)
+		var a = getValue("accelRow");
+		
 	if (isKnown("timeRow")){
-		var tKnown = True;
+		var tKnown = true;
 		var t = getValue("timeRow");
 	}
 	else{
-		var tKnown = False;
+		var tKnown = false;
 	}
 	if (isKnown("viRow")){
-		var viKnown = True;
+		var viKnown = true;
 		var vi = getValue("viRow");
 	}
 	else{
-		var viKnown = False;
+		var viKnown = false;
 	}
 	if (isKnown("vfRow")){
-		var vfKnown = True;
+		var vfKnown = true;
 		var vf = getValue("vfRow");
 	}
 	else{
-		var vfKnown = False;
+		var vfKnown = false;
 	}
 	if (isKnown("avgVRow")){
-		var vaKnown = True;
+		var vaKnown = true;
 		var va = getValue("avgVRow");
 	}
 	else{
-		var vaKnown = False;
+		var vaKnown = false;
 	}
 	
 	//equations
@@ -249,19 +243,15 @@ function proccessDist(){
 		return;	
 	}
 	else if(vfKnown && viKnown && tKnown){
-		setValue(t*(vi+vf)/2);	
+		setValue("dispRow", t*(vi+vf)/2);	
 		return;
 	}
 	else if(tKnown && viKnown && aKnown){
-		setValue(vi*t+.5*a*Math.pow(t,2));	
+		setValue("dispRow", vi*t+.5*a*Math.pow(t,2));	
 		return;
 	}
 	else if(vfKnown && viKnown && aKnown){
-		setValue((Math.pow(vf, 2)-Math.pow(vi,2))/(2*a));	
-		return;
-	}
-	else{
-		setValue("Can't be calculated with given info");	
+		setValue("dispRow", (Math.pow(vf, 2)-Math.pow(vi,2))/(2*a));	
 		return;
 	}
 }
