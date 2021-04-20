@@ -197,6 +197,74 @@ function proccessAcc(){
 		return;
 	}
 }
+
+function proccessDist(){
+	//initialize variable so it is quicker to write out equations
+	
+	if (isKnown("accelRow")){
+		var aKnown = True;
+		var a = getValue("accelRow");
+	}
+	else{
+		var aKnown = False;
+	}
+	if (isKnown("dispRow")){
+		var dKnown = True;
+		var d = getValue("dispRow");
+	}
+	else{
+		var dKnown = False;
+	}
+	if (isKnown("timeRow")){
+		var tKnown = True;
+		var t = getValue("timeRow");
+	}
+	else{
+		var tKnown = False;
+	}
+	if (isKnown("viRow")){
+		var viKnown = True;
+		var vi = getValue("viRow");
+	}
+	else{
+		var viKnown = False;
+	}
+	if (isKnown("vfRow")){
+		var vfKnown = True;
+		var vf = getValue("vfRow");
+	}
+	else{
+		var vfKnown = False;
+	}
+	if (isKnown("avgVRow")){
+		var vaKnown = True;
+		var va = getValue("avgVRow");
+	}
+	else{
+		var vaKnown = False;
+	}
+	
+	//equations
+	if(dKnown){
+		return;	
+	}
+	else if(vfKnown && viKnown && tKnown){
+		setValue(t*(vi+vf)/2);	
+		return;
+	}
+	else if(tKnown && viKnown && aKnown){
+		setValue(vi*t+.5*a*Math.pow(t,2));	
+		return;
+	}
+	else if(vfKnown && viKnown && aKnown){
+		setValue((Math.pow(vf, 2)-Math.pow(vi,2))/(2*a));	
+		return;
+	}
+	else{
+		setValue("Can't be calculated with given info");	
+		return;
+	}
+}
 			
 function processAll () {
 	processVelAvg();
