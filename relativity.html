@@ -10,12 +10,16 @@
 
 	<h2>Lorentz Factor</h2>
 
-	Velocity: <input type="number" id='vel'>
-	Factor: <input type="number" id='factor'>
+	Velocity: <input type="number" id='vel' value=0>
+	<br>
+	Factor: <input type="number" id='factor' value=0>
 
 	<script>
 	document.getElementById("vel").onchange = function () {
-		console.log(this);
+		var value = parseFloat(this.value);
+		var factor = 1 / Math.sqrt(1 - value ^ 2);
+		
+		document.getElementById("factor").value = factor;
 	}
 	document.getElementById("factor").onchange = function () {
 		console.log(this);
