@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 
 <html>
-	<head>
-		<title>Physics Calculators</title>
-	</head>
-	
-	<body>
-    <h1> Special Relativity </h1>
-    
-    
-    
-		<script>
-window.onload = function () {
-	
+<head>
+<title>Physics Calculators</title>
+</head>
+
+<body>
+	<h1>Special Relativity</h1>
+
+	<h2>Lorentz Factor</h2>
+
+	Velocity: <input type="number" id='vel'>
+	Factor: <input type="number" id='factor'>
+
+	<script>
+	document.getElementById("vel").onchange = function () {
+		console.log(this);
 	}
-		</script>
-	</body>
+	document.getElementById("factor").onchange = function () {
+		console.log(this);
+	}
+	</script>
+</body>
 </html>
