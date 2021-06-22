@@ -16,8 +16,8 @@
 
 	<script>
 	document.getElementById("vel").onchange = function () {
-		var value = parseFloat(this.value);
-		var factor = 1 / Math.sqrt(1 - value ^ 2);
+		var v = parseFloat(this.value);
+		var factor = 1 / Math.sqrt(1 - (v * v));
 		
 		document.getElementById("factor").value = factor;
 	}
