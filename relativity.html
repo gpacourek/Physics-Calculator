@@ -11,19 +11,30 @@
 	<h2>Lorentz Factor</h2>
 
 	Velocity: <input type="number" id='vel' value=0>
+	<select>
+		<option value=299792458>m/s</option>
+		<option value=1>c</option>
+		<option value=6.706e+8>mph</option>
+	</select>
 	<br>
 	Factor: <input type="number" id='factor' value=0>
 
 	<script>
 	document.getElementById("vel").onchange = function () {
-		var v = parseFloat(this.value);
+		var v = parseFloat(this.value) / document.querySelector("select").value;
 		var factor = 1 / Math.sqrt(1 - (v * v));
 		
 		document.getElementById("factor").value = factor;
 	}
 	document.getElementById("factor").onchange = function () {
-		console.log(this);
+		var factor = parseFloat(this.value);
+		
+		var v = Math.sqrt(1 - 1 / Math.pow(factor, 2)) * document.querySelector("select").value;
+		
+		document.getElementById("vel").value = v;
 	}
+	
+	//setTimeout(() => {location.reload()}, 5000);
 	</script>
 </body>
 </html>
